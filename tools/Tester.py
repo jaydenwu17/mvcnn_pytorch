@@ -12,26 +12,25 @@ Aug 14, 2019
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
 import numpy as np
-import pickle
 import os
-from tensorboardX import SummaryWriter
 import time
+from torch.autograd import Variable
 
 class ModelNetTester(object):
 
-    def __init__(self, model, test_loader, optimizer, loss_fn, model_name, log_dir, num_views=12):
+    def __init__(self, model, test_loader, loss_fn, model_name, weight_path, weight_name, num_views=12):
 
         self.model = model
-        self.train_loader = train_loader
-        self.val_loader = val_loader
+        self.test_loader = test_loader
         self.loss_fn = loss_fn
         self.model_name = model_name
         self.num_views = num_views
 
         self.model.cuda()
+        
+        self.model.load(weight_path, weight_name)
+
 
     def test(self):
         all_correct_points = 0
@@ -62,11 +61,11 @@ class ModelNetTester(object):
             model_name = data[2]
             print(model_name)
 
-#            for i in range(results.size()[0]):
-#                if not bool(results[i].cpu().data.numpy()):
-#                    wrong_class[target.cpu().data.numpy().astype('int')[i]] += 1
-#                samples_class[target.cpu().data.numpy().astype('int')[i]] += 1
-#            correct_points = torch.sum(results.long())
+            for i in range(results.size()[0]):
+                if not bool(results[i].cpu().data.numpy()):
+                    wrong_class[target.cpu().data.numpy().astype('int')[i]] += 1
+                samples_class[target.cpu().data.numpy().astype('int')[i]] += 1
+            correct_points = torch.sum(results.long())
 
             all_correct_points += correct_points
             all_points += results.size()[0]
@@ -75,11 +74,11 @@ class ModelNetTester(object):
         val_mean_class_acc = np.mean((samples_class-wrong_class)/samples_class)
         acc = all_correct_points.float() / all_points
         val_overall_acc = acc.cpu().data.numpy()
-        loss = all_loss / len(self.val_loader)
+        loss = all_loss / len(self.test_loader)
 
-        print ('val mean class acc. : ', val_mean_class_acc)
-        print ('val overall acc. : ', val_overall_acc)
-        print ('val loss : ', loss)
+        print ('test mean class acc. : ', val_mean_class_acc)
+        print ('test overall acc. : ', val_overall_acc)
+        print ('test loss : ', loss)
 
         return loss, val_overall_acc, val_mean_class_acc
 
