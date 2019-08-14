@@ -1,0 +1,1 @@
+{"name": "MVCNN", "batchSize": 8, "num_models": 1000, "lr": 5e-05, "weight_decay": 0.0, "no_pretraining": false, "cnn_name": "vgg11", "num_views": 12, "train_path": "/disk1/spirit-dictionary/baseline/deeperlook/modelnet40_images_train/airplane/train", "val_path": "/disk1/spirit-dictionary/baseline/deeperlook/modelnet40_images_train/airplane/val"}

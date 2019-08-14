@@ -20,7 +20,7 @@ parser.add_argument("-cnn_name", "--cnn_name", type=str, help="cnn model name", 
 parser.add_argument("-num_views", type=int, help="number of views", default=12)
 parser.add_argument("-train_path", type=str, default="modelnet40_images_new_12x/*/train")
 parser.add_argument("-val_path", type=str, default="modelnet40_images_new_12x/*/test")
-parser.set_defaults(train=False)
+#parser.set_defaults(train=False)
 
 def create_folder(log_dir):
     # make summary folder
